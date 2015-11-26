@@ -1,0 +1,113 @@
+html, body {
+    height: 100%
+}
+
+#container {
+    min-height: 100%
+}
+
+#main {
+    overflow:auto;
+    padding-bottom: 80px;
+}
+
+#footer {
+    background:#2DBB28;
+
+    margin-top: -80px;
+    height: 80px;
+    clear: both;
+    padding-top: 20px;
+}
+
+#header{
+    background-color:#2DBB28;
+    padding: 10px;
+}
+
+.row {
+    margin: 0px;
+    padding: 0px;
+}
+
+.col-sm-1, .col-sm-8 ,.col-sm-10 {
+    float:none;
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:-4px;
+}
+
+h1 a:hover, a:active{
+    text-decoration: none;
+    color: white;
+}
+
+.nav_link a:link, a:visited {
+    color: white;
+}
+
+.nav_link a:hover, a:active, a:focus {
+    color: #1E311D;
+    text-decoration: none;
+}
+/*causes changes in other linkes for some reason
+.footer_link a:link, a:visited {
+    color: #003300;
+}
+
+.footer_link a:hover, a:active, a:focus {
+    color: white;
+    text-decoration: none;
+}
+*/
+a:active, a:focus {
+    outline: none;
+}
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 100%;
+    margin: 0px;
+    height: 300px;
+}
+
+#three_steps h2{
+    color: #235021;
+}
+
+#three_steps {
+    padding-top: 20px;
+    text-align: center;
+    cursor: default;
+    background-image: url("/media/pictures/tree101.png");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+
+#three_steps a{
+    text-align: center;
+    color: #387A36;
+    text-decoration: none;
+    outline: none;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#three_steps .glyphicon {
+    font-size: 30px;
+    color: #2DBB28;
+}
+
+.errorlist {
+    list-style-type: none;
+    color: red;
+}
+
+#signup label{
+    display: none;
+}
+
+
+
+
+
