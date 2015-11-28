@@ -1,43 +1,51 @@
 html, body {
-    height: 100%
+    margin:0;
+    padding:0;
+    height:100%;
 }
 
 #container {
-    min-height: 100%
+    min-height:100%;
+    position:relative;
+}
+
+#nav {
+
 }
 
 #main {
-    overflow:auto;
     padding-bottom: 80px;
 }
 
 #footer {
     background:#2DBB28;
-
-    margin-top: -80px;
-    height: 80px;
-    clear: both;
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:80px;
     padding-top: 20px;
+}
+
+.btn {
+    outline: none;
+
 }
 
 #header{
     background-color:#2DBB28;
-    padding: 10px;
+
 }
 
-.row {
-    margin: 0px;
-    padding: 0px;
-}
 
-.col-sm-1, .col-sm-8 ,.col-sm-10 {
-    float:none;
-    display:inline-block;
-    vertical-align:middle;
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
     margin-right:-4px;
 }
 
-h1 a:hover, a:active{
+
+h1 a:hover, a:active, a:focus{
     text-decoration: none;
     color: white;
 }
@@ -50,24 +58,20 @@ h1 a:hover, a:active{
     color: #1E311D;
     text-decoration: none;
 }
-/*causes changes in other linkes for some reason
-.footer_link a:link, a:visited {
-    color: #003300;
-}
 
-.footer_link a:hover, a:active, a:focus {
-    color: white;
-    text-decoration: none;
-}
-*/
 a:active, a:focus {
     outline: none;
+    -moz-outline-style: none;
+}
+
+.btn:focus, .btn:active {
+    outline: none;
+    -moz-outline-style: none;
 }
 
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
     width: 100%;
-    margin: 0px;
     height: 300px;
 }
 
@@ -107,6 +111,33 @@ a:active, a:focus {
     display: none;
 }
 
+.green_bg {
+    background-color: #d7f6d5;
+
+}
+
+.white_bg {
+    background-color: white;
+
+}
+
+#profile_pic {
+    height: 200px;
+    width: 200px;
+    border: 5px solid #2DBB28;
+}
+
+#profile_username {
+    font-size: 30px;
+}
+
+#profile_name {
+    font-size: 20px;
+}
+
+.text_limit {
+    word-break: break-all;
+}
 
 
 

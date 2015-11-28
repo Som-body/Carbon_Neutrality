@@ -1,0 +1,25 @@
+{% extends "Main/index.html" %}
+
+{% block account_content %}
+    <div class="container-fluid green_bg">
+        <br>
+        <div class="row">
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-2 vcenter text-center">
+                <img src="/media/{{ userdata.profile_img }}" id="profile_pic">
+            </div>
+            <div class="col-sm-7 vcenter">
+                <div id="profile_username" class="text_limit">{{ profile_user.get_username }}</div>
+                <div id="profile_name" class="text_limit">{{ profile_user.first_name }}  {{ profile_user.last_name }}</div>
+            </div>
+            <div class="col-sm-2 vcenter text-center">
+                {% if user == profile_user %}
+                    <a href="/" class="btn btn-lg btn-success">My Account</a>
+                {% else %}
+                    <a href="/" class="btn btn-lg btn-success">Add As Friend</a>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+    </div>
+{% endblock account_content %}
