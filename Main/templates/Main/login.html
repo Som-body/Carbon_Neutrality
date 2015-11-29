@@ -9,7 +9,7 @@
         <p class="error">{{ error_message }}</p>
     {% endif %}
 
-    <form action="/login/" method="POST">
+    <form action="./?next={{ redirect_to }}" method="POST">
         {% csrf_token %}
         <input type="text" name="username" class="form-control" placeholder="Username" value="" id="username">
         <input type="password" name="password" class="form-control" placeholder="Password" value="" id="password">

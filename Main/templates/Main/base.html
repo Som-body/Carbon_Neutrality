@@ -18,10 +18,10 @@
                 <div class="col-sm-10 vcenter"><h1><a href="/">The Carbon Neutrality Project</a></h1></div>
                 {% if user.is_authenticated %}
                     <div class="col-sm-1 nav_link vcenter"><a href="/" class="btn btn-success pull-right">My Page</a></div>
-                    <div class="col-sm-1 nav_link vcenter"><a href="/logout" class="btn btn-success">Log Out</a></div>
+                    <div class="col-sm-1 nav_link vcenter"><a href="/logout/?next={{ request.path }}" class="btn btn-success">Log Out</a></div>
                 {% else %}
-                    <div class="col-sm-1 nav_link vcenter"><a href="/login/" class="btn btn-success pull-right">Log In</a></div>
-                    <div class="col-sm-1 nav_link vcenter"><a href="/signup" class="btn btn-success ">Sign Up</a></div>
+                    <div class="col-sm-1 nav_link vcenter"><a href="/login/?next={{ request.path }}" class="btn btn-success pull-right">Log In</a></div>
+                    <div class="col-sm-1 nav_link vcenter"><a href="/signup/?next={{ request.path }}" class="btn btn-success ">Sign Up</a></div>
                 {% endif %}
             </div>
         </div>

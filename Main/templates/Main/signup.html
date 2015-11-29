@@ -1,7 +1,7 @@
 {% extends "Main/base.html" %}
 
 {% block content %}
-    <form id="signup" action="/signup" method="post">
+    <form id="signup" action="/signup/?next={{ next_url }}" method="post">
         {% csrf_token %}
         {{ form }}
         <br>
