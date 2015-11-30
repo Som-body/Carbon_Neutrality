@@ -1,0 +1,10 @@
+{% extends "Main/base.html" %}
+
+{% block content %}
+    <form id="tree_form" action="/add_tree" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <br>
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Add Tree"/>
+    </form>
+{% endblock content %}

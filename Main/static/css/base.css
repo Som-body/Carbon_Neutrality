@@ -69,8 +69,8 @@ a:active, a:focus {
     -moz-outline-style: none;
 }
 
-.carousel-inner > .item > img,
-.carousel-inner > .item > a > img {
+#main_carousel > .carousel-inner > .item > img,
+#main_carousel > .carousel-inner > .item > a > img {
     width: 100%;
     height: 300px;
 }
@@ -113,12 +113,14 @@ a:active, a:focus {
 
 .green_bg {
     background-color: #d7f6d5;
-
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .white_bg {
     background-color: white;
-
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 #profile_pic {
@@ -138,6 +140,42 @@ a:active, a:focus {
 .text_limit {
     word-break: break-all;
 }
+
+.content_title {
+    text-align: center;
+    color: #235021;
+    font-size: 30px;
+}
+
+.content_title2 {
+    text-align: center;
+    color: #2DBB28;
+    font-size: 30px;
+}
+
+#tree_carousel > .carousel-inner > .item > img,
+#tree_carousel > .carousel-inner > .item > a > img {
+    border: 5px solid #2DBB28;
+    margin: 0px 2%;
+    width: 15%;
+    height: 150px;
+    display: inline-block;
+}
+
+#tree_form label{
+    display: none;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
 
 
 

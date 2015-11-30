@@ -109,3 +109,5 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = '/Users/Standard/Dropbox/ICS 415/Project/Carbon_Neutrality/Main/media'
 
 MEDIA_URL = '/media/'
+
+LOGIN_URL = '/login/'

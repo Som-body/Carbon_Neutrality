@@ -8,10 +8,20 @@ from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
-from .forms import CNRegistrationForm
-from .models import CarouselSlide, UserModel
+from django import template
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
+
+from .forms import CNRegistrationForm, TreeForm
+from .models import CarouselSlide, UserModel
+
+
+register = template.Library()
+
+@register.filter
+def modulo(num, val):
+    return num % val
 
 class IndexView(generic.ListView):
     template_name = "Main/index.html"
@@ -88,6 +98,38 @@ def AccountView(request, username):
     userdata = UserModel.objects.get(user = u)
     args['userdata'] = userdata
     return render_to_response('Main/account.html', args)
+
+
+class TreeView(FormView):
+    template_name = 'Main/tree.html'
+    form_class = TreeForm
+    
+    def get_form_kwargs(self, *args, **kwargs):
+        return dict(
+            super(TreeView, self).get_form_kwargs(*args, **kwargs),
+            **{'user': self.request.user}
+        )
+        
+    def get_context_data(self, **kwargs):
+        context = super(FormView, self).get_context_data(**kwargs)
+        context['user'] = self.request.user 
+        return context
+    
+    def get_success_url(self):
+        user_page = self.request.user.get_username()
+        if user_page:
+            return '/user/' + user_page 
+        return '/' 
+    
+    def form_valid(self, form):
+        form.save()
+        return super(TreeView, self).form_valid(form)
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TreeView, self).dispatch(*args, **kwargs)
+
+
 
             
     
