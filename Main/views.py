@@ -14,7 +14,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 
 from .forms import CNRegistrationForm, TreeForm
-from .models import CarouselSlide, UserModel
+from .models import CarouselSlide, UserModel, Friend, Tree
 
 
 register = template.Library()
@@ -32,29 +32,34 @@ class IndexView(generic.ListView):
  
 def login(request):
     redirect_to = request.REQUEST.get('next', '/')
-    if request.method == "POST":
-        username = request.POST.get('username', '')
-        password = request.POST.get('password', '')
-        user = auth.authenticate(username=username, password=password)
-        
-        if user is not None:
-            auth.login(request, user)
-            return HttpResponseRedirect(redirect_to)
-        
+    
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(redirect_to)
+    else:
+        if request.method == "POST":
+            username = request.POST.get('username', '')
+            password = request.POST.get('password', '')
+            user = auth.authenticate(username=username, password=password)
+            
+            if user is not None:
+                auth.login(request, user)
+                return HttpResponseRedirect(redirect_to)
+            
+            else:
+                args = locals()
+                args.update(csrf(request))
+                args['error_message'] = "Invalid username and password combination"
+                return render_to_response('Main/login.html', args)
+            
         else:
             args = locals()
             args.update(csrf(request))
-            args['error_message'] = "Invalid username and password combination"
             return render_to_response('Main/login.html', args)
-        
-    else:
-        args = locals()
-        args.update(csrf(request))
-        return render_to_response('Main/login.html', args)
     
 def logout(request):
     redirect_to = request.REQUEST.get('next', '/')
-    auth.logout(request)
+    if request.user.is_authenticated():
+        auth.logout(request)
     return HttpResponseRedirect(redirect_to)
    
 class SignUpView(FormView):
@@ -78,12 +83,19 @@ class SignUpView(FormView):
                                  password = self.request.POST.get('password1'))    
         auth.login(self.request, user)
         return super(SignUpView, self).form_valid(form)
+    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(request.REQUEST.get('next', '/'))
+        else:
+            return super(SignUpView, self).dispatch(request, *args, **kwargs)
 
 def finish_sign_up(request):
     redirect_to = request.REQUEST.get('next', '/')
     if request.user.is_authenticated():
         if not UserModel.objects.filter(user = request.user):
             UserModel.objects.create(user = request.user)
+            Friend.objects.create(user = request.user, friend = request.user).save()
     return HttpResponseRedirect(redirect_to)
 
 def AccountView(request, username):
@@ -122,12 +134,74 @@ class TreeView(FormView):
         return '/' 
     
     def form_valid(self, form):
-        form.save()
+        tree = form.save()
+        user_model = UserModel.objects.get(user = tree.user)
+        user_model.offset += tree.get_lifetime_offset()
+        user_model.net_emission = user_model.get_net_emission()
+        user_model.save()
+        
         return super(TreeView, self).form_valid(form)
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TreeView, self).dispatch(*args, **kwargs)
+    
+@login_required
+def edit_profile(request):
+    if request.POST:
+        user = request.user                   
+        if request.POST.get('first_name'):
+            user.first_name = request.POST.get('first_name')
+        if request.POST.get('last_name'):
+            user.last_name = request.POST.get('last_name')
+        if request.POST.get('email'):
+            user.email = request.POST.get('email') 
+        if request.FILES['picture']:
+            user_model = UserModel.objects.get(user = user)
+            user_model.profile_img = request.FILES['picture']
+            user_model.save()
+        user.save()
+
+        return HttpResponseRedirect('/user/' + user.get_username())            
+    
+    else:
+        user = request.user
+        args = locals()
+        args.update(csrf(request))
+        args['user'] = user
+        userdata = UserModel.objects.get(user = user)
+        args['userdata'] = userdata
+        return render_to_response('Main/edit_profile.html', args)
+
+@login_required
+def change_password(request):
+    if request.POST:
+        user = request.user
+        
+        if user.check_password(str(request.POST.get('old_password'))) and (request.POST.get('new_password') == request.POST.get('confirm')):
+            user.set_password(request.POST.get('new_password'))                  
+            user.save()
+            return HttpResponseRedirect('/user/' + user.get_username())
+        else:
+            
+            user = request.user
+            args = locals()
+            args.update(csrf(request))
+            args['user'] = user
+            userdata = UserModel.objects.get(user = user)
+            args['userdata'] = userdata
+            return render_to_response('Main/change_password.html', args)
+  
+                
+                    
+    else:
+        user = request.user
+        args = locals()
+        args.update(csrf(request))
+        args['user'] = user
+        userdata = UserModel.objects.get(user = user)
+        args['userdata'] = userdata
+        return render_to_response('Main/change_password.html', args)
 
 
 

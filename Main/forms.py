@@ -36,7 +36,6 @@ class TreeForm(forms.ModelForm):
     date_planted = forms.DateField(widget=forms.DateInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Date (YYYY-MM-DD)"}), initial = timezone.now())
     adult_diameter = forms.DecimalField(widget=forms.NumberInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Adult Diameter", 'min' : "0"}), initial='/media/tree/tree101.png')
     picture = forms.ImageField(widget=forms.FileInput(attrs={'accept' : 'image/*'}), required = False)
-    date_died = forms.Date
     
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -57,8 +56,12 @@ class TreeForm(forms.ModelForm):
         tree.date_planted = self.cleaned_data['date_planted']
         tree.adult_diameter = self.cleaned_data['adult_diameter']
         if self.cleaned_data['picture']:
-            tree.picture = self.cleaned_data['picutre']
+            tree.picture = self.cleaned_data['picture']
             
         if commit:
             tree.save()
         return tree
+    
+
+    
+    

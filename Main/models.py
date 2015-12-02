@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-from decimal import Decimal
+from django.utils import timezone
+
+from decimal import *
+from math import exp
 
 class CarouselSlide(models.Model):
     url = models.CharField(max_length = 255, default = '')
@@ -13,46 +16,91 @@ class UserModel(models.Model):
     user = models.OneToOneField(User)
     profile_img = models.ImageField(upload_to = 'profile_pic/', default = 'profile_pic/default_pic.png')
     
-    car_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    motorcyle_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    train_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    bus_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    plane_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    electricity_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    fuel_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    gas_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    water_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    general_meat_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    poultry_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    seafood_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    milk_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    vegetable_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    drink_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    clothes_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    furniture_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    health_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    vehicle_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
-    house_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 10, decimal_places=2)
+    car_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    motorcycle_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    train_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    bus_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    plane_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    electricity_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    fuel_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    gas_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    water_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    general_meat_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    poultry_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    seafood_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    milk_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    vegetable_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    drink_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    clothes_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    furniture_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    health_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    vehicle_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    house_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    
+    offset = models.DecimalField(default = Decimal('0.00'), max_digits = 16, decimal_places=2)
+    
+    net_emission = models.DecimalField(default = Decimal('0.00'), max_digits = 16, decimal_places=2)
+    
+    def get_emissions(self):
+        return (self.car_emissions + self.motorcycle_emissions + self.train_emissions + self.bus_emissions + self.plane_emissions + 
+                self.electricity_emissions + self.fuel_emissions + self.gas_emissions + self.water_emissions +
+                self.general_meat_emissions + self.poultry_emissions + self.seafood_emissions + self.milk_emissions + self.vegetable_emissions + self.drink_emissions +
+                self.clothes_emissions + self.furniture_emissions + self.health_emissions + self.vehicle_emissions + self.house_emissions)
+    
+    def get_net_emission(self):
+        return self.get_emissions() - self.offset
+    
+    class Meta:
+        ordering = ['-net_emission']
+        
     
 class Tree(models.Model):
     user = models.ForeignKey(User)
-    adult_diameter = models.DecimalField(max_digits = 6, decimal_places = 2)
+    adult_diameter = models.DecimalField(max_digits = 6, decimal_places = 2) #cm
     location = models.CharField(max_length = 50)
     longitude = models.DecimalField(max_digits = 8, decimal_places = 5)
     latitude = models.DecimalField(max_digits = 7, decimal_places = 5)
     species = models.CharField(max_length = 50)
     date_planted = models.DateField()
     is_alive = models.BooleanField(default = True)
-    picture = models.ImageField(upload_to = '/trees', default = 'pictures/tree101.png')
+    picture = models.ImageField(upload_to = 'trees', default = 'trees/tree101.png')
     date_died = models.DateField(null = True, blank = True, default = None)
+    
+    def get_lifetime_offset(self):
+        return self.cal_lifetime_offset()[0]
+    
+    def get_offset_over_time(self):
+        return self.cal_lifetime_offset()[1]
+    
+    def cal_lifetime_offset(self):
+        
+        lifetime_offset = Decimal('0.0')
+        offset_over_time = []
+        
+        body_mass = Decimal('0.0998') * (self.adult_diameter ** Decimal('2.5445'))
+        growth_rate = Decimal('0.208') * (body_mass ** Decimal('0.763'))
+        
+        for i in range(86):
+            calculation_year = self.date_planted.year + i
+            
+            dkdy = (Decimal(str(exp(1 - (((growth_rate * Decimal(str(exp(1)))) * Decimal(str(calculation_year - self.date_planted.year)) / body_mass))))) / Decimal(str(exp(1)))) * (growth_rate * Decimal(str(exp(1))))
+            dkdyt = dkdy * Decimal('1.24')
+            carbon = dkdyt * Decimal('0.47')
+            co2 = carbon * Decimal('3.6663')
+            co2 = co2.quantize(Decimal('.01'), rounding=ROUND_UP)
+            lifetime_offset += co2
+            
+            offset_over_time.append(co2)
+        
+        return (lifetime_offset, offset_over_time)
     
     class Meta:
         ordering = ['-date_planted']
     
-class Friends(models.Model):
-    user = models.OneToOneField(User)
+class Friend(models.Model):
+    user = models.ForeignKey(User)
     friend = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_friends")
-    date_friended = models.DateTimeField()
+    date_friended = models.DateTimeField(default = timezone.now())
     
     class Meta:
         unique_together = (("user", "friend"),)

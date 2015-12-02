@@ -106,7 +106,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = '/Users/Standard/Dropbox/ICS 415/Project/Carbon_Neutrality/Main/media'
+MEDIA_ROOT = '/Main/media'
 
 MEDIA_URL = '/media/'
 

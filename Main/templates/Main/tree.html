@@ -1,7 +1,7 @@
 {% extends "Main/base.html" %}
 
 {% block content %}
-    <form id="tree_form" action="/add_tree" method="post">
+    <form id="tree_form" action="/add_tree" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <br>

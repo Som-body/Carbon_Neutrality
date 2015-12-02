@@ -156,7 +156,7 @@ a:active, a:focus {
 #tree_carousel > .carousel-inner > .item > img,
 #tree_carousel > .carousel-inner > .item > a > img {
     border: 5px solid #2DBB28;
-    margin: 0px 2%;
+    margin: 0px 1%;
     width: 15%;
     height: 150px;
     display: inline-block;
@@ -176,6 +176,11 @@ input[type=number] {
     -moz-appearance:textfield;
 }
 
+
+.main_image {
+    width: 250px;
+    height: 250px;
+}
 
 
 

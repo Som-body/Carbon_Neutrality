@@ -1,0 +1,29 @@
+{% extends "Main/base.html" %}
+
+{% block content %}
+    <br><br>
+    <img src="{{ userdata.profile_img.url }}" class="main_image" alt="Profile Pic"/>
+    <br>
+    <h6 class="content_title">User: {{ user.get_username }}</h6>
+    <a href="/change_password" class="btn btn-success">Change Password</a>
+    <br>
+    <form action="." method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        First Name:
+        <input class="form-control"  type="text" name="first_name" value="{{ user.first_name }}" required/><br>
+        Last Name:
+        <input class="form-control"  type="text" name="last_name" value="{{ user.last_name }}" required/><br>
+        Email:
+        <input class="form-control"  type="email" name="email" value="{{ user.email }}" required/><br>
+
+        Change Profile Picture:
+        <input type="file" accept="image/*" name="picture" /><br>
+
+        <input class="btn btn-lg" type="reset" value="Reset" name="reset" />
+        <input class="btn btn-lg btn-primary btn-success" type="submit" value="Save Changes" name="save" />
+
+        <br/>
+    </form>
+    <br>
+    <a href="/user/{{ user.get_username }}" class="btn btn-success">back</a>
+{% endblock content %}

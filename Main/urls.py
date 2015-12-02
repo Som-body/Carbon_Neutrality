@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^finish_sign_up/$', 'Main.views.finish_sign_up'),
     url(r'^signup/$', views.SignUpView.as_view(), name = 'signup'),
     url(r'^add_tree$', views.TreeView.as_view(), name = 'tree_form'),
+    url(r'^edit_profile/$', 'Main.views.edit_profile'),
+    url(r'^change_password/$', 'Main.views.change_password'),
 ]
