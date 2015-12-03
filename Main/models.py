@@ -16,10 +16,34 @@ class UserModel(models.Model):
     user = models.OneToOneField(User, related_name='info')
     profile_img = models.ImageField(upload_to = 'profile_pic/', default = 'profile_pic/default_pic.png')
     
+    precal_car = models.IntegerField(default = 0)
+    precal_car_efficiency = models.IntegerField(default = 0)
+    precal_fuel_type = models.CharField(default='Gasoline', max_length='9')
+    precal_bus = models.IntegerField(default = 0)
+    precal_train = models.IntegerField(default = 0)
+    precal_plane = models.IntegerField(default = 0)
+    precal_electricity = models.IntegerField(default = 0)
+    precal_fuel = models.IntegerField(default = 0)
+    precal_gas = models.IntegerField(default = 0)
+    precal_water = models.IntegerField(default = 0)
+    precal_general_meat = models.IntegerField(default = 0)
+    precal_poultry = models.IntegerField(default = 0)
+    precal_seafood = models.IntegerField(default = 0)
+    precal_vegetable = models.IntegerField(default = 0)
+    precal_milk = models.IntegerField(default = 0)
+    precal_drink = models.IntegerField(default = 0)
+    precal_clothes = models.IntegerField(default = 0)
+    precal_furniture = models.IntegerField(default = 0)
+    precal_health = models.IntegerField(default = 0)
+    precal_vehicle = models.IntegerField(default = 0)
+    precal_house = models.IntegerField(default = 0)
+    
+    
     car_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
-    motorcycle_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
-    train_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    car_efficiency = models.DecimalField(default = Decimal('0.00'), max_digits = 6, decimal_places=2)
+    fuel_emission = models.DecimalField(default = Decimal('8874'), max_digits = 5, decimal_places=0)
     bus_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    train_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     plane_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     electricity_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     fuel_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
@@ -28,8 +52,8 @@ class UserModel(models.Model):
     general_meat_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     poultry_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     seafood_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
-    milk_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     vegetable_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
+    milk_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     drink_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     clothes_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     furniture_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
@@ -37,18 +61,20 @@ class UserModel(models.Model):
     vehicle_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     house_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
     
+    emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 16, decimal_places=2)
+    
     offset = models.DecimalField(default = Decimal('0.00'), max_digits = 16, decimal_places=2)
     
     net_emission = models.DecimalField(default = Decimal('0.00'), max_digits = 16, decimal_places=2)
     
     def get_emissions(self):
-        return (self.car_emissions + self.motorcycle_emissions + self.train_emissions + self.bus_emissions + self.plane_emissions + 
+        return (self.car_emissions + self.train_emissions + self.bus_emissions + self.plane_emissions + 
                 self.electricity_emissions + self.fuel_emissions + self.gas_emissions + self.water_emissions +
                 self.general_meat_emissions + self.poultry_emissions + self.seafood_emissions + self.milk_emissions + self.vegetable_emissions + self.drink_emissions +
                 self.clothes_emissions + self.furniture_emissions + self.health_emissions + self.vehicle_emissions + self.house_emissions)
     
     def get_net_emission(self):
-        return self.get_emissions() - self.offset
+        return (self.get_emissions() / Decimal('1000')) - self.offset
     
     class Meta:
         ordering = ['net_emission']

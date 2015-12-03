@@ -2,45 +2,196 @@
 
 {% block content %}
     <h2 class="content_header">Your Emissions</h2>
+    <div class="text-center">
+        <label class="radio_picture">
+            <input type="radio" name="select_emissions" checked="checked" value="transportation"/>
+            <img src="/media/pictures/button_car.png"/>
+        </label>
+        <label class="radio_picture">
+            <input type="radio" name="select_emissions" value="housing"/>
+            <img src="/media/pictures/button_home.png"/>
+        </label>
+        <label class="radio_picture">
+            <input type="radio" name="select_emissions" value="food"/>
+            <img src="/media/pictures/button_plate.png"/>
+        </label>
+        <label class="radio_picture">
+            <input type="radio" name="select_emissions" value="shopping"/>
+            <img src="/media/pictures/button_shopping_cart.png"/>
+        </label>
+    </div>
     <form action="." method="POST">
         {% csrf_token %}
 
-        <div id="transportation_emissions">
-            <h2 class="content_title2">How much do you travel per year?</h2>
-
+        <div id="transportation_emissions" class="hide-show">
+            <h2 class="content_title2">How many miles do you travel per year?</h2>
             <div class="green_bg transportation_emissions">
                 <div class="text-center">
-                    <input type="text" name="car_miles" placeholder="Distance" class="emission_input"/><br>
+                    <p class="text-dgreen">Car or Motorcycle</p>
+                    <input type="number" name="car_miles" placeholder="Distance" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_car }}" {% endif %}/><br>
+                    <input type="number" name="car_efficiency" placeholder="Fuel Efficiency" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_car_efficiency }}" {% endif %}/><br>
                     <select name="car_fuel">
-                        <option value="Gasoline">Gasoline</option>
-                        <option value="Diesel">Diesel</option>
-                    </select><br>
-                    <input type="text" name="car_fficiency" placeholder="Fuel Efficiency" class="emission_input"/><br>
+                        {% if userdata and userdata.emissions != 0 %}
+                            {% if userdata.precal_fuel_type == "Diesel" %}
+                                <option value="Diesel" >Diesel</option>
+                                <option value="Gasoline">Gasoline</option>
+                            {% else %}
+                                <option value="Gasoline">Gasoline</option>
+                                <option value="Diesel" >Diesel</option>
+                            {% endif %}
+
+                        {% else %}
+                            <option value="Gasoline">Gasoline</option>
+                            <option value="Diesel" >Diesel</option>
+                        {% endif %}
+                    </select>
                 </div>
             </div>
-
+            <br>
+            <div class="green_bg transportation_emissions_bus">
+                <div class="text-center">
+                    <p class="text-dgreen">Bus</p>
+                    <input type="number" name="bus_miles" placeholder="Distance" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_bus }}" {% endif %}/><br>
+                </div>
+            </div>
+            <br>
+            <div class="green_bg transportation_emissions_train">
+                <div class="text-center">
+                    <p class="text-dgreen">Train</p>
+                    <input type="number" name="train_miles" placeholder="Distance" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_train }}" {% endif %}/><br>
+                </div>
+            </div>
+            <br>
+            <div class="green_bg transportation_emissions_plane">
+                <div class="text-center">
+                    <p class="text-dgreen">Flight</p>
+                    <input type="number" name="flight_miles" placeholder="Distance" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_plane }}" {% endif %}/><br>
+                </div>
+            </div>
         </div>
         <br>
 
-        <div id="housing_emissions" class="green_bg">
-
+        <div id="housing_emissions" class="hide-show" style="display: none;">
+            <h2 class="content_title2">How much of these utilities do you use a year?</h2>
+            <div class="green_bg housing_emissions_electricity">
+                <div class="text-center">
+                    <p class="text-dgreen">Electricity</p>
+                    <input type="number" name="housing_electricity" placeholder="Kilowatts" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_electricity }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg housing_emissions_fuel">
+                <div class="text-center">
+                    <p class="text-dgreen">Fuel</p>
+                    <input type="number" name="housing_fuel" placeholder="Gallons" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_fuel }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg housing_emissions_gas">
+                <div class="text-center">
+                    <p class="text-dgreen">Gas</p>
+                    <input type="number" name="housing_gas" placeholder="Cubic Feet" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_gas }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg housing_emissions_water">
+                <div class="text-center">
+                    <p class="text-dgreen">Water</p>
+                    <input type="number" name="housing_water" placeholder="Gallons" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_water }}" {% endif %}/><br>
+                </div>
+            </div><br>
         </div>
         <br>
 
-        <div id="food_emissions" class="green_bg">
-
+        <div id="food_emissions" class="hide-show" style="display: none;">
+            <h2 class="content_title2">How much calories do you consume in a week?</h2>
+            <div class="green_bg food_emissions_general_meat">
+                <div class="text-center">
+                    <p class="text-dgreen">Beef, Pork, Lamb</p>
+                    <input type="number" name="food_general_meat" placeholder="Calories" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_general_meat }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg food_emissions_poultry">
+                <div class="text-center">
+                    <p class="text-dgreen">Poultry</p>
+                    <input type="number" name="food_poultry" placeholder="Calories" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_poultry }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg food_emissions_seafood">
+                <div class="text-center">
+                    <p class="text-dgreen">Seafood</p>
+                    <input type="number" name="food_seafood" placeholder="Calories" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_seafood }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg food_emissions_vegetables">
+                <div class="text-center">
+                    <p class="text-dgreen">Vegetables</p>
+                    <input type="number" name="food_vegetables" placeholder="Calories" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_vegetable }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg food_emissions_milk">
+                <div class="text-center">
+                    <p class="text-dgreen">Milk</p>
+                    <input type="number" name="food_milk" placeholder="Calories" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_milk }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg food_emissions_drinks">
+                <div class="text-center">
+                    <p class="text-dgreen">Drinks</p>
+                    <input type="number" name="food_drinks" placeholder="Calories" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_drink }}" {% endif %}/><br>
+                </div>
+            </div><br>
         </div>
         <br>
 
-        <div id="shopping_emissions" class="green_bg">
-
+        <div id="shopping_emissions" class="hide-show"style="display: none;">
+            <h2 class="content_title2">How much do you spend in a month?</h2>
+            <div class="green_bg shopping_emissions_clothes">
+                <div class="text-center">
+                    <p class="text-dgreen">Clothes</p>
+                    <input type="number" name="shopping_clothes" placeholder="Dollars" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_clothes }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg shopping_emissions_furniture">
+                <div class="text-center">
+                    <p class="text-dgreen">Furniture</p>
+                    <input type="number" name="shopping_furniture" placeholder="Dollars" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_furniture }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg shopping_emissions_health">
+                <div class="text-center">
+                    <p class="text-dgreen">Health Care</p>
+                    <input type="number" name="shopping_health_care" placeholder="Dollars" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_health }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg shopping_emissions_vehicle">
+                <div class="text-center">
+                    <p class="text-dgreen">Vehicles</p>
+                    <input type="number" name="shopping_vehicles" placeholder="Dollars" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_vehicle }}" {% endif %}/><br>
+                </div>
+            </div><br>
+            <div class="green_bg shopping_emissions_house">
+                <div class="text-center">
+                    <p class="text-dgreen">House Maintenance</p>
+                    <input type="number" name="shopping_house_maintenance" placeholder="Dollars" class="emission_input" {% if userdata and userdata.emissions != 0 %} value="{{ userdata.precal_house }}" {% endif %}/><br>
+                </div>
+            </div><br>
         </div>
         <br>
-
-        <input class="btn btn-lg btn-success" type="submit" value="Save Changes{% if not user.is_authenticated %}*{% endif %}" name="save" />
+        <div class="text-center">
+            <input class="btn btn-lg btn-success" type="submit" value="Save Changes{% if not user.is_authenticated %}*{% endif %}" name="save" />
+        </div>
     </form>
     {% if not user.is_authenticated %}
-        <p class="text-green text-center">Sign up required to save changes.</p>
+        <p class="text-green text-center">Sign up required to save changes. Data will NOT be saved if you are not logged in.</p>
     {% endif %}
+
+    <script>
+        $(document).ready(function() {
+            $("input[name$='select_emissions']").click(function() {
+                var test = $(this).val();
+
+                $("div.hide-show").hide();
+                $("#" + test + "_emissions").show();
+            });
+        });
+    </script>
 
 {% endblock content %}

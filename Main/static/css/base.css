@@ -69,11 +69,6 @@ a:active, a:focus {
     -moz-outline-style: none;
 }
 
-#main_carousel > .carousel-inner > .item > img,
-#main_carousel > .carousel-inner > .item > a > img {
-    width: 100%;
-}
-
 #three_steps h2{
     color: #235021;
 }
@@ -165,6 +160,42 @@ a:active, a:focus {
     display: inline-block;
 }
 
+#friend_carousel > .carousel-inner > .item > figure,
+#friend_carousel > .carousel-inner > .item > a > figure {
+    border: 5px solid #2DBB28;
+    margin: 0px 1%;
+    width: 15%;
+    display: inline-block;
+}
+
+#friend_carousel > .carousel-inner > .item > figure > img,
+#friend_carousel > .carousel-inner > .item > a > figure > img{
+    width: 100%;
+}
+
+#friend_carousel > .carousel-inner > .item > figure > figcaption,
+#friend_carousel > .carousel-inner > .item > a > figure > figcaption{
+    color: #1E311D;
+}
+
+#rank_carousel > .carousel-inner > .item > figure,
+#rank_carousel > .carousel-inner > .item > a > figure {
+    border: 5px solid #2DBB28;
+    margin: 0px 1%;
+    width: 15%;
+    display: inline-block;
+}
+
+#rank_carousel > .carousel-inner > .item > figure > img,
+#rank_carousel > .carousel-inner > .item > a > figure > img{
+    width: 100%;
+}
+
+#rank_carousel > .carousel-inner > .item > figure > figcaption,
+#rank_carousel > .carousel-inner > .item > a > figure > figcaption{
+    color: #1E311D;
+}
+
 #tree_form label{
     display: none;
 }
@@ -212,6 +243,7 @@ form {
 .form-control {
     margin: 10px 0;
     border: 1px solid green;
+    color: #2DBB28;
 }
 
 ::-webkit-input-placeholder {
@@ -250,6 +282,10 @@ form {
     color: #2DBB28;
 }
 
+.text-dgreen {
+    color: #235021;
+}
+
 .emission_input {
     margin: 10px 0;
     border: 0;
@@ -258,22 +294,176 @@ form {
 
 select {
     border: 1px solid #2DBB28;
-    background-color: #d7f6d5;
     color: #2DBB28;
     border-radius: 10px;
 }
 
 select option {
-    background-color: #d7f6d5;
     color: #2DBB28;
 }
 
 .transportation_emissions {
-    background-image: url("/media/pictures/tree101.png");
+    background-image: url("/media/pictures/car.png");
     background-repeat: no-repeat;
     background-position: left;
     background-size: 100px 100px;
 }
+
+.transportation_emissions_bus {
+    background-image: url("/media/pictures/bus.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.transportation_emissions_train {
+    background-image: url("/media/pictures/subway1.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.transportation_emissions_plane {
+    background-image: url("/media/pictures/airplane105.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.housing_emissions_electricity {
+    background-image: url("/media/pictures/lightbulb58.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.housing_emissions_fuel {
+    background-image: url("/media/pictures/fuel24.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.housing_emissions_gas {
+    background-image: url("/media/pictures/cooking7.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.housing_emissions_water {
+    background-image: url("/media/pictures/raindrop2.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.food_emissions_general_meat {
+    background-image: url("/media/pictures/steak.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.food_emissions_poultry {
+    background-image: url("/media/pictures/turkey7.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.food_emissions_seafood {
+    background-image: url("/media/pictures/fish52.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.food_emissions_vegetables {
+    background-image: url("/media/pictures/healthy-food5.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.food_emissions_milk {
+    background-image: url("/media/pictures/box44.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.food_emissions_drinks {
+    background-image: url("/media/pictures/coke.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.shopping_emissions_clothes {
+    background-image: url("/media/pictures/tshirt18.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.shopping_emissions_furniture {
+    background-image: url("/media/pictures/sofa9.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.shopping_emissions_health {
+    background-image: url("/media/pictures/stethoscope.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.shopping_emissions_vehicle {
+    background-image: url("/media/pictures/car.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.shopping_emissions_house {
+    background-image: url("/media/pictures/home.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
+}
+
+.radio_picture > input{
+    display:none;
+}
+.radio_picture > input + img{
+    cursor:pointer;
+    border:2px solid transparent;
+}
+.radio_picture > input:checked + img{
+    border:5px solid #1E311D;
+}
+
+input {
+    color: #2DBB28;
+}
+
+#emission_chart {
+    width: 100%;
+    height: 500px;
+}
+
+#main_carousel > .carousel-inner > .item > img,
+#main_carousel > .carousel-inner > .item > a > img {
+    width: 100%;
+}
+
+
+
+
+
 
 
 

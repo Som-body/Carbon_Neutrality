@@ -1,10 +1,45 @@
 {% extends "Main/base.html" %}
 
 {% block content %}
+    <h2 class="content_header">Thank You!</h2>
     <form id="tree_form" action="/add_tree" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <br>
+        <p class="text-green">Image:</p><br>
         <input type="submit" class="btn btn-lg btn-success" value="Add Tree"/>
     </form>
+    <div class="text-center">
+        <p class="text-green">Drag, zoom in and drag marker as close to tree planting location</p>
+    </div>
+
+    <center><div id="mapCanvas" style="width:500px;height:380px;"></div></center>
+
+
+    <script>
+        function initialize()
+        {
+            var geocoder = new google.maps.Geocoder();
+
+            var LAT = document.getElementById("latbox").value;
+            var LON = document.getElementById("lngbox").value;
+            var latLng = new google.maps.LatLng(LAT, LON);
+            var map = new google.maps.Map(document.getElementById('mapCanvas'),
+                    {zoom: 2, center: latLng, streetViewControl:false, mapTypeId: google.maps.MapTypeId.ROADMAP});
+            var marker = new google.maps.Marker({position: latLng, map: map, draggable: true});
+
+            //fill the boxes with the coordenates
+            google.maps.event.addListener(marker, 'dragend', function (event)
+            {
+                document.getElementById("latbox").value =  Math.round(this.getPosition().lat()*100000)/100000;
+                document.getElementById("lngbox").value = Math.round(this.getPosition().lng()*100000)/100000;
+
+                //centers map on marker
+                var latLng = marker.getPosition(); // returns LatLng object
+                map.setCenter(latLng); // setCenter takes a LatLng object
+            });
+        }
+
+        // Onload handler to fire off the app.
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 {% endblock content %}

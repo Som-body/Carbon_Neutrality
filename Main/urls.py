@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^unfriend_user/$', 'Main.views.unfriend_user'),
     url(r'^find_friend/$', 'Main.views.find_friend'),
     url(r'^carbon_emissions/$', 'Main.views.carbon_emissions'),
+    url(r'^about/$', 'Main.views.about'),
 ]

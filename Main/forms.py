@@ -5,6 +5,8 @@ from django.utils import timezone
 
 from .models import Tree, UserModel
 
+from decimal import *
+
 class CNRegistrationForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Username", "maxlength" : '30'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Email Address"}))
@@ -31,11 +33,11 @@ class CNRegistrationForm(UserCreationForm):
 class TreeForm(forms.ModelForm):
     species = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Species", "maxlength" : '50'}))
     location = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Location", "maxlength" : '50'}))
-    longitude = forms.DecimalField(widget=forms.NumberInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Longitude (-180 to 180)", 'min' : "-180", 'max' : "180"}))
-    latitude = forms.DecimalField(widget=forms.NumberInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Latitude (-90 to 90)", 'min' : "-90", 'max' : "90"}))
+    longitude = forms.DecimalField(widget=forms.NumberInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Longitude (-180 to 180)", 'min' : "-180", 'max' : "180", 'id' : 'lngbox', 'onblur' : 'initialize()'}))
+    latitude = forms.DecimalField(widget=forms.NumberInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Latitude (-90 to 90)", 'min' : "-90", 'max' : "90", 'id' : 'latbox', 'onblur' : 'initialize()'}))
     date_planted = forms.DateField(widget=forms.DateInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Date (YYYY-MM-DD)"}), initial = timezone.now())
-    adult_diameter = forms.DecimalField(widget=forms.NumberInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Adult Diameter", 'min' : "0"}), initial='/media/trees/tree101.png')
-    picture = forms.ImageField(widget=forms.FileInput(attrs={'accept' : 'image/*'}), required = False)
+    adult_diameter = forms.DecimalField(widget=forms.NumberInput(attrs={'class' : 'form-control form_input', 'placeholder' : "Adult Diameter", 'min' : "0"}))
+    picture = forms.ImageField(widget=forms.FileInput(attrs={'accept' : 'image/*'}), required = False, initial='/media/trees/tree101.png')
     
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -51,10 +53,10 @@ class TreeForm(forms.ModelForm):
         tree.user = self.user
         tree.species = self.cleaned_data['species']
         tree.location = self.cleaned_data['location']
-        tree.longitude = self.cleaned_data['longitude']
-        tree.latitude = self.cleaned_data['latitude']
+        tree.longitude = Decimal(str(self.cleaned_data['longitude']))
+        tree.latitude = Decimal(str(self.cleaned_data['latitude']))
         tree.date_planted = self.cleaned_data['date_planted']
-        tree.adult_diameter = self.cleaned_data['adult_diameter']
+        tree.adult_diameter = Decimal(str(self.cleaned_data['adult_diameter']))
         if self.cleaned_data['picture']:
             tree.picture = self.cleaned_data['picture']
             

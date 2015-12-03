@@ -28,14 +28,29 @@
         </div>
     </div>
 
-    <div class="green_bg">
+    <div class="container-fluid green_bg">
+        <h6 class="content_title">{% if profile_user == user %}My Progress{% else %}{{ profile_user.get_username }}'s Progress{% endif %}</h6>
+        <div class="row">
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-4 vcenter text-center">
+                <div id="emission_chart"></div>
+
+
+            </div>
+            <div class="col-sm-3 vcenter"></div>
+            <div class="col-sm-3 vcenter"></div>
+            <div class="col-sm-1 vcenter text-center"></div>
+        </div>
+    </div>
+
+    <div class="white_bg">
         {% if user == profile_user %}
             <h6 class="content_title">My Friends</h6>
         {% else %}
             <h6 class="content_title">{{ profile_user.first_name }}'s Friends</h6>
         {% endif %}
         <br>
-        {% if profile_user.friend_set.all %}
+        {% if profile_user.friend_set.all and profile_user.friend_set.count != 1%}
             <div id="friend_carousel" class="carousel slide" data-ride="carousel">
 
                 <div class="carousel-inner" role="listbox">
@@ -45,16 +60,30 @@
                                 </div>
                                 <div class="item text-center">
                             {% endif %}
-                            <a href="/user/{{ friendship.friend.get_username }}"><img src="{{ friendship.user.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}"></a>
+                                    {% if profile_user == friendship.friend %}
+                                        <a href="/user/{{ friendship.friend.get_username }}">
+                                            <figure>
+                                                <img src="{{ friendship.user.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}"style="border: 10px solid #235021;">
+                                                <figcaption>Rank #{{ forloop.counter }}: {{ friendship.friend.get_username }}<br>Net Emission: {{ friendship.friend.info.net_emission }}Kg CO<sub>2</sub></figcaption>
+                                            </figure>
+                                        </a>
+                                    {% else %}
+                                        <a href="/user/{{ friendship.friend.get_username }}">
+                                            <figure>
+                                                <img src="{{ friendship.user.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}">
+                                                <figcaption>Rank #{{ forloop.counter }}: {{ friendship.friend.get_username }}<br>Net Emission: {{ friendship.friend.info.net_emission }}Kg CO<sub>2</sub></figcaption>
+                                            </figure>
+                                        </a>
+                                    {% endif %}
                         {% endfor %}
                     </div>
                 </div>
 
-                <a class="left carousel-control" href="#tree_carousel" role="button" data-slide="prev">
+                <a class="left carousel-control" href="#friend_carousel" role="button" data-slide="prev">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a class="right carousel-control" href="#tree_carousel" role="button" data-slide="next">
+                <a class="right carousel-control" href="#friend_carousel" role="button" data-slide="next">
                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
@@ -70,6 +99,52 @@
                 <a href="/find_friend" class="btn btn-sm btn-success">Add Friend</a>
             </div>
         {% endif %}
+    </div>
+
+    <div class="green_bg">
+        {% if user == profile_user %}
+            <h6 class="content_title">How do I Rank?</h6>
+        {% else %}
+            <h6 class="content_title">How does {{ profile_user.first_name }}' Rank?</h6>
+        {% endif %}
+        <br>
+        <div id="rank_carousel" class="carousel slide" data-ride="carousel">
+
+            <div class="carousel-inner" role="listbox">
+                <div class="item active text-center">
+                    {% for ranked in users %}
+                        {% if forloop.counter != 1 and forloop.counter0|divisibleby:"5" %}
+                            </div>
+                            <div class="item text-center">
+                        {% endif %}
+                                {% if profile_user == ranked.user %}
+                                    <a href="/user/{{ ranked.user.get_username }}">
+                                        <figure style="border: 10px solid #235021;">
+                                            <img src="{{ ranked.user.info.profile_img.url }}" alt="rank #{{ forloop.counter }}, {{ ranked.user.get_username }}">
+                                            <figcaption>Rank #{{ forloop.counter }}: {{ ranked.user.get_username }}<br>Net Emission: {{ ranked.user.info.net_emission }}Kg CO<sub>2</sub></figcaption>
+                                        </figure>
+                                    </a>
+                                {% else %}
+                                    <a href="/user/{{ ranked.user.get_username }}">
+                                        <figure>
+                                            <img src="{{ ranked.user.info.profile_img.url }}" alt="rank #{{ forloop.counter }}, {{ ranked.user.get_username }}">
+                                            <figcaption>Rank #{{ forloop.counter }}: {{ ranked.user.get_username }}<br>Net Emission: {{ ranked.user.info.net_emission }}Kg CO<sub>2</sub></figcaption>
+                                        </figure>
+                                    </a>
+                                {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <a class="left carousel-control" href="#rank_carousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#rank_carousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
     </div>
 
     <div class="white_bg">
@@ -115,5 +190,46 @@
             </div>
         {% endif %}
     </div>
+
+    <script>
+        $(function () {
+            var h = new Highcharts.Chart({
+
+                chart: {type: 'column',marginRight: 0, renderTo: "emission_chart"},
+                legend: {enabled: false},
+                title: {text: '',style: {display: 'none'}},
+                xAxis: {categories: ['Emitted<br>CO<sub>2</sub>','CO<sub>2</sub><br>offset<br>by trees<br>.']},
+                yAxis: {allowDecimals: false,min: 0,title: {text: 'Kg of CO2'}},
+                tooltip: {backgroundColor: "rgba(255,255,255,1)",formatter: function () {return this.y + 'kg of CO2 through '+ this.series.name},hideDelay: 1},
+                plotOptions: {column: {stacking: 'normal',borderWidth: .9},
+                    series: {pointWidth: 55}
+                },
+
+                series: [{% for tree in profile_user.tree_set.all %}
+                            {name: '{{ tree.species }}', data: [0, {{ tree.get_lifetime_offset }}], color:'green'},
+                        {% endfor %}
+                    {name: 'driving', data: [{{ profile_user.info.car_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'bus', data: [{{ profile_user.info.bus_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'train', data: [{{ profile_user.info.train_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'flight', data: [{{ profile_user.info.plane_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'electricity', data: [{{ profile_user.info.electricity_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'fuel', data: [{{ profile_user.info.fuel_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'natural gas', data: [{{ profile_user.info.gas_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'water', data: [{{ profile_user.info.water_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'general meats', data: [{{ profile_user.info.general_meat_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'poultry', data: [{{ profile_user.info.poultry_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'seafood', data: [{{ profile_user.info.seafood_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'vegetables', data: [{{ profile_user.info.vegetable_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'milk', data: [{{ profile_user.info.milk_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'drinks', data: [{{ profile_user.info.drink_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'clothing', data: [{{ profile_user.info.clothes_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'furniture & appliances', data: [{{ profile_user.info.furniture_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'health care', data: [{{ profile_user.info.health_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'vehicle expenses', data: [{{ profile_user.info.vehicle_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'house_maintenance', data: [{{ profile_user.info.house_emissions }},0],color:'rgb(250,160,80)'},
+                ]
+            });
+        });
+    </script>
 {% endblock account_content %}
 

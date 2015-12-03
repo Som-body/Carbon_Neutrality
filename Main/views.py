@@ -17,11 +17,15 @@ from django.shortcuts import get_object_or_404
 from .forms import CNRegistrationForm, TreeForm
 from .models import CarouselSlide, UserModel, Friend, Tree
 
+from decimal import *
+from PIL import Image
+
 class IndexView(generic.ListView):
     template_name = "Main/index.html"
     context_object_name = 'slides'
     
     def get_queryset(self):
+        
         return CarouselSlide.objects.all()
  
 def login(request):
@@ -104,6 +108,7 @@ def AccountView(request, username):
         args['friend'] = Friend.objects.filter(user = user, friend = u)
     userdata = UserModel.objects.get(user = u)
     args['userdata'] = userdata
+    args['users'] = UserModel.objects.all()[:20]
     return render_to_response('Main/account.html', args)
 
 
@@ -178,8 +183,6 @@ def change_password(request):
             user.save()
             return HttpResponseRedirect('/user/' + user.get_username())
         else:
-            
-            user = request.user
             args = locals()
             args.update(csrf(request))
             args['user'] = user
@@ -260,10 +263,105 @@ def find_friend(request):
         return render_to_response('Main/find_friend.html', args)
 
 def carbon_emissions(request):
-    args = locals()
-    args.update(csrf(request))
-    args['user'] = request.user
-    return render_to_response('Main/carbon_emissions.html', args)
+    user = request.user
+    if request.POST:
+        if user.is_authenticated():
+            user_model = UserModel.objects.filter(user = user)
+            if user_model:
+                user_model = user_model[0]
+                if request.POST.get('car_miles') and request.POST.get('car_efficiency') and request.POST.get('car_fuel'):
+                    user_model.precal_car_efficiency = int(request.POST.get('car_efficiency'))
+                    user_model.car_efficiency = Decimal(str(user_model.precal_car_efficiency))
+                    user_model.precal_fuel_type = request.POST.get('car_fuel')
+                    if user_model.precal_fuel_type == 'Gasoline':
+                        user_model.fuel_emission = Decimal('8874')
+                    else:
+                        user_model.fuel_emission = Decimal('10153')
+                    user_model.precal_car = int(request.POST.get('car_miles'))
+                    user_model.car_emissions = (Decimal(str(user_model.precal_car)) / user_model.car_efficiency) * user_model.fuel_emission
+                if request.POST.get('bus_miles'):
+                    user_model.precal_bus = int(request.POST.get('bus_miles'))
+                    user_model.bus_emissions = Decimal(str(user_model.precal_bus)) * Decimal('300')
+                if request.POST.get('train_miles'):
+                    user_model.precal_train = int(request.POST.get('train_miles'))
+                    user_model.train_emissions = Decimal(str(user_model.precal_train)) * Decimal('163')
+                if request.POST.get('flight_miles'):
+                    user_model.precal_plane = int(request.POST.get('flight_miles'))
+                    user_model.plane_emissions = Decimal(str(user_model.precal_plane)) * Decimal('223')
+                    
+                if request.POST.get('housing_electricity'):
+                    user_model.precal_electricity = int(request.POST.get('housing_electricity'))
+                    user_model.electricity_emissions = Decimal(str(user_model.precal_electricity)) * Decimal('835')
+                if request.POST.get('housing_fuel'):
+                    user_model.precal_fuel = int(request.POST.get('housing_fuel'))
+                    user_model.fuel_emissions = Decimal(str(user_model.precal_fuel)) * Decimal('682')
+                if request.POST.get('housing_gas'):
+                    user_model.precal_gas = int(request.POST.get('housing_gas'))
+                    user_model.gas_emissions = Decimal(str(user_model.precal_gas)) * Decimal('54.7')
+                if request.POST.get('housing_water'):
+                    user_model.precal_water = int(request.POST.get('housing_water'))
+                    user_model.water_emissions = Decimal(str(user_model.precal_water)) * Decimal('11707')
+                
+                if request.POST.get('food_general_meat'):
+                    user_model.precal_general_meat = int(request.POST.get('food_general_meat'))
+                    user_model.general_meat_emissions = Decimal(str(user_model.precal_general_meat)) * Decimal('6.09') * Decimal('52')
+                if request.POST.get('food_poultry'):
+                    user_model.precal_poultry = int(request.POST.get('food_poultry'))
+                    user_model.poultry_emissions = Decimal(str(user_model.precal_poultry)) * Decimal('4.27') * Decimal('52')
+                if request.POST.get('food_seafood'):
+                    user_model.precal_seafood = int(request.POST.get('food_seafood'))
+                    user_model.seafood_emissions = Decimal(str(user_model.precal_seafood)) * Decimal('5.71') * Decimal('52')
+                if request.POST.get('food_vegetables'):
+                    user_model.precal_vegetable = int(request.POST.get('food_vegetables'))
+                    user_model.vegetable_emissions = Decimal(str(user_model.precal_vegetable)) * Decimal('3.35') * Decimal('52')
+                if request.POST.get('food_milk'):
+                    user_model.precal_milk = int(request.POST.get('food_milk'))
+                    user_model.milk_emissions = Decimal(str(user_model.precal_milk)) * Decimal('4') * Decimal('52')
+                if request.POST.get('food_drinks'):
+                    user_model.precal_drink = int(request.POST.get('food_drinks'))
+                    user_model.drink_emissions = Decimal(str(user_model.precal_drink)) * Decimal('2.24') * Decimal('52')
+                    
+                if request.POST.get('shopping_clothes'):
+                    user_model.precal_clothes = int(request.POST.get('shopping_clothes'))
+                    user_model.clothes_emissions = Decimal(str(user_model.precal_clothes)) * Decimal('750') * Decimal('12')
+                if request.POST.get('shopping_furniture'):
+                    user_model.precal_furniture = int(request.POST.get('shopping_furniture'))
+                    user_model.furniture_emissions = Decimal(str(user_model.precal_furniture)) * Decimal('614') * Decimal('12')
+                if request.POST.get('shopping_health_care'):
+                    user_model.precal_health = int(request.POST.get('shopping_health_care'))
+                    user_model.health_emissions = Decimal(str(user_model.precal_health)) * Decimal('696') * Decimal('12')
+                if request.POST.get('shopping_vehicles'):
+                    user_model.precal_vehicle = int(request.POST.get('shopping_vehicles'))
+                    user_model.vehicle_emissions = Decimal(str(user_model.precal_vehicle)) * Decimal('558') * Decimal('12')
+                if request.POST.get('shopping_house_maintenance'):
+                    user_model.precal_house = int(request.POST.get('shopping_house_maintenance'))
+                    user_model.house_emissions = Decimal(str(user_model.precal_house)) * Decimal('954') * Decimal('12')
+                
+                user_model.emissions = user_model.get_emissions()
+                user_model.net_emission = user_model.get_net_emission()
+                user_model.save()
+                return HttpResponseRedirect('/user/' + user.get_username())
+            else:
+                return HttpResponseRedirect('/signup/?next=' + request.path) 
+            
+        else:
+            args = locals()
+            args.update(csrf(request))
+            args['user'] = user
+            return HttpResponseRedirect('/signup/?next=' + request.path)    
+                    
+    else:
+        
+        args = locals()
+        args.update(csrf(request))
+        args['user'] = user
+        if user.is_authenticated():
+            userdata = UserModel.objects.get(user = user)
+            args['userdata'] = userdata
+        return render_to_response('Main/carbon_emissions.html', args)
+
+def about(request):
+    return render_to_response('Main/about.html')
 
             
     
