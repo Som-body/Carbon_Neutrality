@@ -13,7 +13,7 @@ class CarouselSlide(models.Model):
         return self.image.url
     
 class UserModel(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, related_name='info')
     profile_img = models.ImageField(upload_to = 'profile_pic/', default = 'profile_pic/default_pic.png')
     
     car_emissions = models.DecimalField(default = Decimal('0.00'), max_digits = 15, decimal_places=2)
@@ -51,7 +51,10 @@ class UserModel(models.Model):
         return self.get_emissions() - self.offset
     
     class Meta:
-        ordering = ['-net_emission']
+        ordering = ['net_emission']
+        
+    def __str__(self):
+        return 'name: ' + self.user.get_username() + ' emissions: ' + str(self.net_emission)
         
     
 class Tree(models.Model):
@@ -100,10 +103,15 @@ class Tree(models.Model):
 class Friend(models.Model):
     user = models.ForeignKey(User)
     friend = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_friends")
-    date_friended = models.DateTimeField(default = timezone.now())
+    friend_model = models.ForeignKey(UserModel, null = True)
+    date_friended = models.DateTimeField(default = timezone.now)
     
     class Meta:
         unique_together = (("user", "friend"),)
+        ordering = ['friend_model']
+        
+    def __str__(self):
+        return 'user: ' + self.user.get_username() + ' friend: ' + self.friend.get_username()
     
 
     

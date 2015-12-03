@@ -12,16 +12,10 @@ from django import template
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
+from django.shortcuts import get_object_or_404
 
 from .forms import CNRegistrationForm, TreeForm
 from .models import CarouselSlide, UserModel, Friend, Tree
-
-
-register = template.Library()
-
-@register.filter
-def modulo(num, val):
-    return num % val
 
 class IndexView(generic.ListView):
     template_name = "Main/index.html"
@@ -99,7 +93,7 @@ def finish_sign_up(request):
     return HttpResponseRedirect(redirect_to)
 
 def AccountView(request, username):
-    u = User.objects.get(username=username)
+    u = get_object_or_404(User, username = username)
     user = request.user
     args = locals()
     args.update(csrf(request))
@@ -107,6 +101,7 @@ def AccountView(request, username):
     args['profile_user'] = u
     if user.is_authenticated():
         args['user'] = user
+        args['friend'] = Friend.objects.filter(user = user, friend = u)
     userdata = UserModel.objects.get(user = u)
     args['userdata'] = userdata
     return render_to_response('Main/account.html', args)
@@ -175,8 +170,8 @@ def edit_profile(request):
 
 @login_required
 def change_password(request):
+    user = request.user
     if request.POST:
-        user = request.user
         
         if user.check_password(str(request.POST.get('old_password'))) and (request.POST.get('new_password') == request.POST.get('confirm')):
             user.set_password(request.POST.get('new_password'))                  
@@ -190,12 +185,13 @@ def change_password(request):
             args['user'] = user
             userdata = UserModel.objects.get(user = user)
             args['userdata'] = userdata
+            args['error_message'] = 'Changes not applied. Please check your old password'
             return render_to_response('Main/change_password.html', args)
   
                 
                     
     else:
-        user = request.user
+        
         args = locals()
         args.update(csrf(request))
         args['user'] = user
@@ -204,6 +200,70 @@ def change_password(request):
         return render_to_response('Main/change_password.html', args)
 
 
+@login_required
+def friend_user(request):
+    friend = User.objects.filter(username = request.REQUEST.get('friend'))
+    user = request.user
+    
+    if friend:
+        friend = friend[0]
+        friendship = Friend.objects.create(user = user, friend = friend, friend_model = UserModel.objects.get(user = friend))
+        reverse_friendship = Friend.objects.create(user = friend, friend = user, friend_model = UserModel.objects.get(user = user))
+        friendship.save()
+        reverse_friendship.save()
+
+    return HttpResponseRedirect('/user/' + friend.get_username())
+
+@login_required 
+def unfriend_user(request):
+    friend = User.objects.filter(username = request.REQUEST.get('friend'))
+    user = request.user
+    if friend:
+        friend = friend[0]
+        friendship = Friend.objects.filter(user = user, friend = friend)
+        reverse_friendship = Friend.objects.filter(user = friend, friend = user)
+        if friendship:
+            friendship.delete()
+            reverse_friendship.delete()
+    
+    return HttpResponseRedirect('/user/' + friend.get_username())
+
+@login_required
+def find_friend(request):
+    if request.method == "POST":
+        username = request.POST.get('username', '')
+        friend = User.objects.filter(username=username)
+            
+        if friend:
+            friend = friend[0]
+            friendship = Friend.objects.filter(user = request.user, friend = friend)
+            if not friendship:
+                return HttpResponseRedirect('/friend_user/?friend=' + friend.get_username())
+            else:
+                args = locals()
+                args.update(csrf(request))
+                args['user'] = request.user
+                args['error_message'] = "You are already friends with that user"
+                return render_to_response('Main/find_friend.html', args)
+            
+        else:
+            args = locals()
+            args.update(csrf(request))
+            args['user'] = request.user
+            args['error_message'] = "A person with this username does not exist"
+            return render_to_response('Main/find_friend.html', args)
+            
+    else:
+        args = locals()
+        args.update(csrf(request))
+        args['user'] = request.user
+        return render_to_response('Main/find_friend.html', args)
+
+def carbon_emissions(request):
+    args = locals()
+    args.update(csrf(request))
+    args['user'] = request.user
+    return render_to_response('Main/carbon_emissions.html', args)
 
             
     

@@ -1,0 +1,17 @@
+{% extends "Main/base.html" %}
+
+{% block content %}
+
+    {% if error_message %}
+        <p class="errorlist">{{ error_message }}</p>
+    {% endif %}
+
+    <form action="." method="POST">
+        {% csrf_token %}
+        <input type="text" name="username" class="form-control" placeholder="Your friend's username" required/>
+
+        <input type="submit" class="btn btn-lg btn-success" value="Add Friend"/>
+    </form>
+
+
+{% endblock content %}

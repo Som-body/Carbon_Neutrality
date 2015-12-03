@@ -72,7 +72,6 @@ a:active, a:focus {
 #main_carousel > .carousel-inner > .item > img,
 #main_carousel > .carousel-inner > .item > a > img {
     width: 100%;
-    height: 300px;
 }
 
 #three_steps h2{
@@ -83,9 +82,6 @@ a:active, a:focus {
     padding-top: 20px;
     text-align: center;
     cursor: default;
-    background-image: url("/media/pictures/tree101.png");
-    background-repeat: no-repeat;
-    background-position: right bottom;
 }
 
 #three_steps a{
@@ -158,7 +154,14 @@ a:active, a:focus {
     border: 5px solid #2DBB28;
     margin: 0px 1%;
     width: 15%;
-    height: 150px;
+    display: inline-block;
+}
+
+#friend_carousel > .carousel-inner > .item > img,
+#friend_carousel > .carousel-inner > .item > a > img {
+    border: 5px solid #2DBB28;
+    margin: 0px 1%;
+    width: 15%;
     display: inline-block;
 }
 
@@ -180,6 +183,96 @@ input[type=number] {
 .main_image {
     width: 250px;
     height: 250px;
+}
+
+.tree_background {
+    background-image: url("/media/pictures/tree101.png");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+    height: 600px;
+    bottom: 100px;
+}
+
+form {
+    max-width: 400px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.content_header {
+    padding: 20px;
+    text-align: center;
+    color: #235021;
+    font-size: 50px;
+}
+
+.form-control {
+    margin: 10px 0;
+    border: 1px solid green;
+}
+
+::-webkit-input-placeholder {
+    color: #2DBB28;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    color: #2DBB28;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    color: #2DBB28;
+}
+
+:-ms-input-placeholder {
+    color: #2DBB28;
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #2DBB28;
+}
+
+.form-control:-moz-placeholder { /* Firefox 18- */
+    color: #2DBB28;
+}
+
+.form-control::-moz-placeholder {  /* Firefox 19+ */
+    color: #2DBB28;
+}
+
+.form-control:-ms-input-placeholder {
+    color: #2DBB28;
+}
+
+.text-green {
+    color: #2DBB28;
+}
+
+.emission_input {
+    margin: 10px 0;
+    border: 0;
+    border-radius: 10px;
+}
+
+select {
+    border: 1px solid #2DBB28;
+    background-color: #d7f6d5;
+    color: #2DBB28;
+    border-radius: 10px;
+}
+
+select option {
+    background-color: #d7f6d5;
+    color: #2DBB28;
+}
+
+.transportation_emissions {
+    background-image: url("/media/pictures/tree101.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 100px 100px;
 }
 
 

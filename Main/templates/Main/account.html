@@ -16,14 +16,63 @@
                     <br>
                     <a href="/edit_profile" class="btn btn-lg btn-success">My Account</a>
                 {% else %}
-                    <br>
-                    <a href="/" class="btn btn-lg btn-success">Add As Friend</a>
+                    {% if friend %}
+                        <br>
+                        <a href="/unfriend_user/?friend={{ profile_user.get_username }}" class="btn btn-lg btn-danger">Remove Friend</a>
+                    {% else %}
+                        <br>
+                        <a href="/friend_user/?friend={{ profile_user.get_username }}" class="btn btn-lg btn-success">Add As Friend</a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
     </div>
 
     <div class="green_bg">
+        {% if user == profile_user %}
+            <h6 class="content_title">My Friends</h6>
+        {% else %}
+            <h6 class="content_title">{{ profile_user.first_name }}'s Friends</h6>
+        {% endif %}
+        <br>
+        {% if profile_user.friend_set.all %}
+            <div id="friend_carousel" class="carousel slide" data-ride="carousel">
+
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active text-center">
+                        {% for friendship in profile_user.friend_set.all %}
+                            {% if forloop.counter != 1 and forloop.counter0|divisibleby:"5" %}
+                                </div>
+                                <div class="item text-center">
+                            {% endif %}
+                            <a href="/user/{{ friendship.friend.get_username }}"><img src="{{ friendship.user.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}"></a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <a class="left carousel-control" href="#tree_carousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#tree_carousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        {% else %}
+            <br><br>
+            <h6 class="content_title2">No Friends</h6>
+            <br><br>
+        {% endif %}
+        {% if user == profile_user %}
+            <br><br>
+            <div class="text-center">
+                <a href="/find_friend" class="btn btn-sm btn-success">Add Friend</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="white_bg">
         {% if user == profile_user %}
             <h6 class="content_title">My Trees</h6>
         {% else %}
@@ -40,10 +89,8 @@
                                 </div>
                                 <div class="item text-center">
                             {% endif %}
-                            <!-- <div class="tree_container"> -->
-                                <img src="{{ tree.picture.url }}" alt="tree #{{ forloop.counter }}, {{ tree.species }}">
-                            <!-- </div> -->
-                            {% endfor %}
+                            <img src="{{ tree.picture.url }}" alt="tree #{{ forloop.counter }}, {{ tree.species }}">
+                        {% endfor %}
                     </div>
                 </div>
 

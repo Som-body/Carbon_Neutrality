@@ -13,4 +13,8 @@ urlpatterns = [
     url(r'^add_tree$', views.TreeView.as_view(), name = 'tree_form'),
     url(r'^edit_profile/$', 'Main.views.edit_profile'),
     url(r'^change_password/$', 'Main.views.change_password'),
+    url(r'^friend_user/$', 'Main.views.friend_user'),
+    url(r'^unfriend_user/$', 'Main.views.unfriend_user'),
+    url(r'^find_friend/$', 'Main.views.find_friend'),
+    url(r'^carbon_emissions/$', 'Main.views.carbon_emissions'),
 ]

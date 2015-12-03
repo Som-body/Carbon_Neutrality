@@ -9,18 +9,18 @@
     <br>
     <form action="." method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        First Name:
+        <p class="text-green">First Name:</p>
         <input class="form-control"  type="text" name="first_name" value="{{ user.first_name }}" required/><br>
-        Last Name:
+        <p class="text-green">Last Name:</p>
         <input class="form-control"  type="text" name="last_name" value="{{ user.last_name }}" required/><br>
-        Email:
+        <p class="text-green">Email:</p>
         <input class="form-control"  type="email" name="email" value="{{ user.email }}" required/><br>
 
-        Change Profile Picture:
+        <p class="text-green">Change Profile Picture:</p>
         <input type="file" accept="image/*" name="picture" /><br>
 
         <input class="btn btn-lg" type="reset" value="Reset" name="reset" />
-        <input class="btn btn-lg btn-primary btn-success" type="submit" value="Save Changes" name="save" />
+        <input class="btn btn-lg btn-success" type="submit" value="Save Changes" name="save" />
 
         <br/>
     </form>

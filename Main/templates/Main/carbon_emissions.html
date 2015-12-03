@@ -1,0 +1,46 @@
+{% extends "Main/base.html" %}
+
+{% block content %}
+    <h2 class="content_header">Your Emissions</h2>
+    <form action="." method="POST">
+        {% csrf_token %}
+
+        <div id="transportation_emissions">
+            <h2 class="content_title2">How much do you travel per year?</h2>
+
+            <div class="green_bg transportation_emissions">
+                <div class="text-center">
+                    <input type="text" name="car_miles" placeholder="Distance" class="emission_input"/><br>
+                    <select name="car_fuel">
+                        <option value="Gasoline">Gasoline</option>
+                        <option value="Diesel">Diesel</option>
+                    </select><br>
+                    <input type="text" name="car_fficiency" placeholder="Fuel Efficiency" class="emission_input"/><br>
+                </div>
+            </div>
+
+        </div>
+        <br>
+
+        <div id="housing_emissions" class="green_bg">
+
+        </div>
+        <br>
+
+        <div id="food_emissions" class="green_bg">
+
+        </div>
+        <br>
+
+        <div id="shopping_emissions" class="green_bg">
+
+        </div>
+        <br>
+
+        <input class="btn btn-lg btn-success" type="submit" value="Save Changes{% if not user.is_authenticated %}*{% endif %}" name="save" />
+    </form>
+    {% if not user.is_authenticated %}
+        <p class="text-green text-center">Sign up required to save changes.</p>
+    {% endif %}
+
+{% endblock content %}

@@ -1,20 +1,21 @@
 {% extends "Main/base.html" %}
 
 {% block content %}
+    <h2 class="content_header">Welcome Back!</h2>
     {% if form.errors %}
-        <p class="error">Sorry, that's not a valid username or password</p>
+        <p class="errorlist">Sorry, that's not a valid username or password</p>
     {% endif %}
 
     {% if error_message %}
-        <p class="error">{{ error_message }}</p>
+        <p class="errorlist">{{ error_message }}</p>
     {% endif %}
 
     <form action="./?next={{ redirect_to }}" method="POST">
         {% csrf_token %}
         <input type="text" name="username" class="form-control" placeholder="Username" value="" id="username">
         <input type="password" name="password" class="form-control" placeholder="Password" value="" id="password">
-
-        <input type="submit" class="btn btn-lg btn-primary btn-block" value="login"/>
+        <br>
+        <input type="submit" class="btn btn-lg btn-success" value="login"/>
     </form>
 
 
