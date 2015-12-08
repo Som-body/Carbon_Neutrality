@@ -156,9 +156,9 @@ def edit_profile(request):
             user.last_name = request.POST.get('last_name')
         if request.POST.get('email'):
             user.email = request.POST.get('email') 
-        if request.FILES['picture']:
+        if request.FILES.get('picture'):
             user_model = UserModel.objects.get(user = user)
-            user_model.profile_img = request.FILES['picture']
+            user_model.profile_img = request.FILES.get('picture')
             user_model.save()
         user.save()
 
@@ -267,7 +267,9 @@ def carbon_emissions(request):
     if request.POST:
         if user.is_authenticated():
             user_model = UserModel.objects.filter(user = user)
+            print('test1')
             if user_model:
+                print('test2')
                 user_model = user_model[0]
                 if request.POST.get('car_miles') and request.POST.get('car_efficiency') and request.POST.get('car_fuel'):
                     user_model.precal_car_efficiency = int(request.POST.get('car_efficiency'))
@@ -363,5 +365,46 @@ def carbon_emissions(request):
 def about(request):
     return render_to_response('Main/about.html')
 
+def tree_detail(request, pk):
+    tree = get_object_or_404(Tree, id = pk)
+    user = request.user
+    args = locals()
+    args['user'] = user
+    args['tree'] = tree
+    return render_to_response('Main/tree_detail.html', args)
             
-    
+def tree_edit(request, pk):
+    tree = get_object_or_404(Tree, id = pk)
+    user = request.user
+    if user != tree.user:
+        return HttpResponseRedirect('/tree/' + pk + '/')
+    else:
+        if request.POST:
+            if request.POST.get('species'):
+                tree.species = request.POST.get('species')
+            if request.POST.get('location'):
+                tree.location = request.POST.get('location')
+            if request.POST.get('longitude'):
+                tree.longitude = Decimal(str(request.POST.get('longitude')))
+            if request.POST.get('latitude'):
+                tree.latitude = Decimal(str(request.POST.get('latitude')))
+            if request.POST.get('adult_diameter'):
+                user_model = UserModel.objects.get(user = user)
+                user_model.offset -= tree.get_lifetime_offset()
+                tree.adult_diameter = Decimal(str(request.POST.get('adult_diameter')))
+                tree.save()
+                user_model.offset += tree.get_lifetime_offset()
+                user_model.net_emission = user_model.get_net_emission()
+                user_model.save()
+            if request.FILES.get('picture'):
+                tree.picture = request.FILES.get('picture')
+                
+            tree.save()
+            return HttpResponseRedirect('/tree/' + pk + '/')  
+         
+        else:
+            args = locals()
+            args.update(csrf(request))
+            args['user'] = user
+            args['tree'] = tree
+            return render_to_response('Main/tree_edit.html', args)

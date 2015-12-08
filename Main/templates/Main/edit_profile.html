@@ -1,12 +1,14 @@
 {% extends "Main/base.html" %}
 
 {% block content %}
-    <br><br>
-    <img src="{{ userdata.profile_img.url }}" class="main_image" alt="Profile Pic"/>
-    <br>
-    <h6 class="content_title">User: {{ user.get_username }}</h6>
-    <a href="/change_password" class="btn btn-success">Change Password</a>
-    <br>
+    <div class="text-center">
+        <br><br>
+        <img src="{{ userdata.profile_img.url }}" class="main_image" alt="Profile Pic"/>
+        <br>
+        <h6 class="content_title">User: {{ user.get_username }}</h6>
+        <a href="/change_password" class="btn btn-success">Change Password</a>
+        <br>
+    </div>
     <form action="." method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <p class="text-green">First Name:</p>
@@ -25,5 +27,7 @@
         <br/>
     </form>
     <br>
-    <a href="/user/{{ user.get_username }}" class="btn btn-success">back</a>
+    <div class="text-center">
+        <a href="/user/{{ user.get_username }}" class="btn btn-success">back</a>
+    </div>
 {% endblock content %}

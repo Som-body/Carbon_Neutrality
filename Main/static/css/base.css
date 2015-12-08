@@ -148,6 +148,7 @@ a:active, a:focus {
 #tree_carousel > .carousel-inner > .item > a > img {
     border: 5px solid #2DBB28;
     margin: 0px 1%;
+    max_height: 500px;
     width: 15%;
     display: inline-block;
 }
@@ -155,6 +156,7 @@ a:active, a:focus {
 #friend_carousel > .carousel-inner > .item > img,
 #friend_carousel > .carousel-inner > .item > a > img {
     border: 5px solid #2DBB28;
+    max_height: 500px;
     margin: 0px 1%;
     width: 15%;
     display: inline-block;
@@ -163,6 +165,7 @@ a:active, a:focus {
 #friend_carousel > .carousel-inner > .item > figure,
 #friend_carousel > .carousel-inner > .item > a > figure {
     border: 5px solid #2DBB28;
+    max_height: 500px;
     margin: 0px 1%;
     width: 15%;
     display: inline-block;
@@ -171,16 +174,19 @@ a:active, a:focus {
 #friend_carousel > .carousel-inner > .item > figure > img,
 #friend_carousel > .carousel-inner > .item > a > figure > img{
     width: 100%;
+    max_height: 500px;
 }
 
 #friend_carousel > .carousel-inner > .item > figure > figcaption,
 #friend_carousel > .carousel-inner > .item > a > figure > figcaption{
     color: #1E311D;
+    max_height: 500px;
 }
 
 #rank_carousel > .carousel-inner > .item > figure,
 #rank_carousel > .carousel-inner > .item > a > figure {
     border: 5px solid #2DBB28;
+    max_height: 500px;
     margin: 0px 1%;
     width: 15%;
     display: inline-block;
@@ -189,6 +195,7 @@ a:active, a:focus {
 #rank_carousel > .carousel-inner > .item > figure > img,
 #rank_carousel > .carousel-inner > .item > a > figure > img{
     width: 100%;
+    max_height: 500px;
 }
 
 #rank_carousel > .carousel-inner > .item > figure > figcaption,
@@ -460,7 +467,20 @@ input {
     width: 100%;
 }
 
+.form-control:focus {
+    border-color: green;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 255, 0, 0.6);
+}
 
+#profile_tree_pic {
+    width: 80%;
+    height: 300px;
+}
+
+#profile_co2_pic {
+    width: 80%;
+    height: 300px;
+}
 
 
 

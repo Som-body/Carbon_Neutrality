@@ -1,0 +1,53 @@
+{% extends "Main/base.html" %}
+
+{% block content %}
+    <h2 class="content_header">Your {{ tree.species }}</h2>
+    <div class="text-center">
+        <img src="{{ tree.picture.url }}" width="300px" height="300px"/>
+    </div>
+    <form id="tree_edit_form" action="./edit" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p class="text-green">Species:</p> <input class="form-control form_input" id="id_species" maxlength="50" name="species" placeholder="Species" type="text" value="{{ tree.species }}" required/>
+        <p class="text-green">Location:</p> <input class="form-control form_input" id="id_location" maxlength="50" name="location" placeholder="Location" type="text" value="{{ tree.location }}" required/>
+        <p class="text-green">Longitude:</p> <input class="form-control form_input" id="lngbox" max="180" min="-180" name="longitude" onblur="initialize()" placeholder="Longitude (-180 to 180)" step="any" type="number" value="{{ tree.longitude }}" required/>
+        <p class="text-green">Latitude:</p> <input class="form-control form_input" id="latbox" max="90" min="-90" name="latitude" onblur="initialize()" placeholder="Latitude (-90 to 90)" step="any" type="number" value="{{ tree.latitude }}" required/>
+        <p class="text-green">Adult diameter:</p> <input class="form-control form_input" id="id_adult_diameter" min="0" max="9999.99" name="adult_diameter" placeholder="Adult Diameter" step="any" type="number" value="{{ tree.adult_diameter }}" required/>
+        <p class="text-green">Picture:</p> <input accept="image/*" id="id_picture" name="picture" type="file" /></p>
+        <p class="text-green">Change Image:</p><br>
+        <input type="submit" class="btn btn-lg btn-success" value="Change Details"/>
+    </form>
+    <div class="text-center">
+        <p class="text-green">Drag, zoom in and drag marker as close as possible to tree planting location</p>
+    </div>
+
+    <center><div id="mapCanvas" style="width:500px;height:380px;"></div></center>
+
+
+    <script>
+        function initialize()
+        {
+            var geocoder = new google.maps.Geocoder();
+
+            var LAT = document.getElementById("latbox").value;
+            var LON = document.getElementById("lngbox").value;
+            var latLng = new google.maps.LatLng(LAT, LON);
+            var map = new google.maps.Map(document.getElementById('mapCanvas'),
+                    {zoom: 2, center: latLng, streetViewControl:false, mapTypeId: google.maps.MapTypeId.ROADMAP});
+            var marker = new google.maps.Marker({position: latLng, map: map, draggable: true});
+
+            //fill the boxes with the coordenates
+            google.maps.event.addListener(marker, 'dragend', function (event)
+            {
+                document.getElementById("latbox").value =  Math.round(this.getPosition().lat()*100000)/100000;
+                document.getElementById("lngbox").value = Math.round(this.getPosition().lng()*100000)/100000;
+
+                //centers map on marker
+                var latLng = marker.getPosition(); // returns LatLng object
+                map.setCenter(latLng); // setCenter takes a LatLng object
+            });
+        }
+
+        // Onload handler to fire off the app.
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+{% endblock content %}

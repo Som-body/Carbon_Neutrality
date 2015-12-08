@@ -2,13 +2,15 @@
 
 {% block content %}
     <h2 class="content_header">Welcome Back!</h2>
-    {% if form.errors %}
-        <p class="errorlist">Sorry, that's not a valid username or password</p>
-    {% endif %}
+    <div class="text-center">
+        {% if form.errors %}
+            <p class="errorlist">Sorry, that's not a valid username or password</p>
+        {% endif %}
 
-    {% if error_message %}
-        <p class="errorlist">{{ error_message }}</p>
-    {% endif %}
+        {% if error_message %}
+            <p class="errorlist">{{ error_message }}</p>
+        {% endif %}
+    </div>
 
     <form action="./?next={{ redirect_to }}" method="POST">
         {% csrf_token %}

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+import locale
 from decimal import *
 from math import exp
 
@@ -18,7 +19,7 @@ class UserModel(models.Model):
     
     precal_car = models.IntegerField(default = 0)
     precal_car_efficiency = models.IntegerField(default = 0)
-    precal_fuel_type = models.CharField(default='Gasoline', max_length='9')
+    precal_fuel_type = models.CharField(default='Gasoline', max_length=9)
     precal_bus = models.IntegerField(default = 0)
     precal_train = models.IntegerField(default = 0)
     precal_plane = models.IntegerField(default = 0)
@@ -66,6 +67,71 @@ class UserModel(models.Model):
     offset = models.DecimalField(default = Decimal('0.00'), max_digits = 16, decimal_places=2)
     
     net_emission = models.DecimalField(default = Decimal('0.00'), max_digits = 16, decimal_places=2)
+    
+    def get_car_emissions(self):
+        return self.car_emissions / Decimal('1000')
+    
+    def get_bus_emissions(self):
+        return self.bus_emissions / Decimal('1000')
+    
+    def get_train_emissions(self):
+        return self.train_emissions / Decimal('1000')
+    
+    def get_plane_emissions(self):
+        return self.plane_emissions / Decimal('1000')
+    
+    def get_electricity_emissions(self):
+        return self.electricity_emissions / Decimal('1000')
+    
+    def get_fuel_emissions(self):
+        return self.fuel_emissions / Decimal('1000')
+    
+    def get_gas_emissions(self):
+        return self.gas_emissions / Decimal('1000')
+    
+    def get_water_emissions(self):
+        return self.water_emissions / Decimal('1000')
+    
+    def get_general_meat_emissions(self):
+        return self.general_meat_emissions / Decimal('1000')
+    
+    def get_poultry_emissions(self):
+        return self.poultry_emissions / Decimal('1000')
+    
+    def get_seafood_emissions(self):
+        return self.seafood_emissions / Decimal('1000')
+    
+    def get_vegetable_emissions(self):
+        return self.vegetable_emissions / Decimal('1000')
+    
+    def get_milk_emissions(self):
+        return self.milk_emissions / Decimal('1000')
+    
+    def get_drink_emissions(self):
+        return self.drink_emissions / Decimal('1000')
+    
+    def get_clothes_emissions(self):
+        return self.clothes_emissions / Decimal('1000')
+    
+    def get_furniture_emissions(self):
+        return self.furniture_emissions / Decimal('1000')
+    
+    def get_health_emissions(self):
+        return self.health_emissions / Decimal('1000')
+    
+    def get_vehicle_emissions(self):
+        return self.vehicle_emissions / Decimal('1000')
+    
+    def get_house_emissions(self):
+        return self.house_emissions / Decimal('1000')
+    
+    def trees_until_neutrality(self):
+        temp = self.get_net_emission()
+        total = 0
+        while(temp > 0):
+            total += 1
+            temp -= Decimal('62269')
+        return total
     
     def get_emissions(self):
         return (self.car_emissions + self.train_emissions + self.bus_emissions + self.plane_emissions + 

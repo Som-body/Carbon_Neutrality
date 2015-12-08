@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from django.contrib.auth.decorators import login_required
 
 from . import views
 
@@ -18,4 +17,6 @@ urlpatterns = [
     url(r'^find_friend/$', 'Main.views.find_friend'),
     url(r'^carbon_emissions/$', 'Main.views.carbon_emissions'),
     url(r'^about/$', 'Main.views.about'),
+    url(r'^tree/(?P<pk>[0-9]+)/$', 'Main.views.tree_detail'),
+    url(r'^tree/(?P<pk>[0-9]+)/edit$', 'Main.views.tree_edit'),
 ]

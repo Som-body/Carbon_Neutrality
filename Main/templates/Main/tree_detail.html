@@ -1,0 +1,21 @@
+{% extends "Main/base.html" %}
+
+{% block content %}
+    <h2 class="content_header">{{ tree.user.get_username }}'s {{ tree.species }}</h2>
+    <div class="text-center">
+        <img src="{{ tree.picture.url }}" width="300px" height="300px"/>
+        <p class="content_title">Species: {{ tree.species }}</p>
+        <p class="content_title">Location: {{ tree.location }}</p>
+        <p class="content_title">Longitude: {{ tree.longitude }}</p>
+        <p class="content_title">Latitude: {{ tree.latitude }}</p>
+        <p class="content_title">Date Planted: {{ tree.date_planted }}</p>
+        <p class="content_title">Adult Diameter: {{ tree.adult_diameter }}</p>
+        {% if not tree.is_alive %}
+            <p class="content_title">Date Died: {{ tree.date_died }}</p>
+        {% endif %}
+        {% if user == tree.user %}
+            <a href="{{ request.path }}edit" class="btn btn-success btn-lg">Edit Details</a>
+        {% endif %}
+    </div>
+
+{% endblock content %}

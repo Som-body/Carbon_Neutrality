@@ -1,7 +1,7 @@
 {% extends "Main/index.html" %}
 
 {% block account_content %}
-    <div class="container-fluid white_bg">
+    <div class="container-fluid green_bg">
         <div class="row">
             <div class="col-sm-1 vcenter"></div>
             <div class="col-sm-2 vcenter text-center">
@@ -28,22 +28,48 @@
         </div>
     </div>
 
-    <div class="container-fluid green_bg">
+    <div class="container-fluid white_bg">
         <h6 class="content_title">{% if profile_user == user %}My Progress{% else %}{{ profile_user.get_username }}'s Progress{% endif %}</h6>
         <div class="row">
             <div class="col-sm-1 vcenter"></div>
             <div class="col-sm-4 vcenter text-center">
                 <div id="emission_chart"></div>
-
-
             </div>
-            <div class="col-sm-3 vcenter"></div>
-            <div class="col-sm-3 vcenter"></div>
+            <div class="col-sm-3 vcenter">
+                <figure>
+                    <div class="text-center">
+                        <img src="/media/pictures/tree101.png" id="profile_tree_pic">
+                    </div>
+                    <figcaption>
+                        <div class="text-center content_title">
+                            {{ profile_user.info.trees_until_neutrality }} Trees Until Carbon Neutrality<br>
+                            {% if profile_user == user %}
+                                <a href="/add_tree" class="btn btn-success btn-lg">Add Tree</a>
+                            {% endif %}
+                        </div>
+                    </figcaption>
+                </figure>
+            </div>
+            <div class="col-sm-3 vcenter">
+                <figure>
+                    <div class="text-center">
+                        <img src="/media/pictures/pollution.png" id="profile_co2_pic">
+                    </div>
+                    <figcaption>
+                        <div class="text-center content_title">
+                            {{ profile_user.info.net_emission }} Kilograms of CO<sub>2</sub> Left to Offset<br>
+                            {% if profile_user == user %}
+                                <a href="/carbon_emissions" class="btn btn-success btn-lg">Recalculate Emissions</a>
+                            {% endif %}
+                        </div>
+                    </figcaption>
+                </figure>
+            </div>
             <div class="col-sm-1 vcenter text-center"></div>
         </div>
     </div>
 
-    <div class="white_bg">
+    <div class="green_bg">
         {% if user == profile_user %}
             <h6 class="content_title">My Friends</h6>
         {% else %}
@@ -70,7 +96,7 @@
                                     {% else %}
                                         <a href="/user/{{ friendship.friend.get_username }}">
                                             <figure>
-                                                <img src="{{ friendship.user.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}">
+                                                <img src="{{ friendship.friend.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}">
                                                 <figcaption>Rank #{{ forloop.counter }}: {{ friendship.friend.get_username }}<br>Net Emission: {{ friendship.friend.info.net_emission }}Kg CO<sub>2</sub></figcaption>
                                             </figure>
                                         </a>
@@ -101,7 +127,7 @@
         {% endif %}
     </div>
 
-    <div class="green_bg">
+    <div class="white_bg">
         {% if user == profile_user %}
             <h6 class="content_title">How do I Rank?</h6>
         {% else %}
@@ -147,7 +173,7 @@
         </div>
     </div>
 
-    <div class="white_bg">
+    <div class="green_bg">
         {% if user == profile_user %}
             <h6 class="content_title">My Trees</h6>
         {% else %}
@@ -164,7 +190,7 @@
                                 </div>
                                 <div class="item text-center">
                             {% endif %}
-                            <img src="{{ tree.picture.url }}" alt="tree #{{ forloop.counter }}, {{ tree.species }}">
+                            <a href="/tree/{{ tree.id }}/"><img src="{{ tree.picture.url }}" alt="tree #{{ forloop.counter }}, {{ tree.species }}"></a>
                         {% endfor %}
                     </div>
                 </div>
@@ -208,25 +234,25 @@
                 series: [{% for tree in profile_user.tree_set.all %}
                             {name: '{{ tree.species }}', data: [0, {{ tree.get_lifetime_offset }}], color:'green'},
                         {% endfor %}
-                    {name: 'driving', data: [{{ profile_user.info.car_emissions }},0],color:'rgb(160,180,210)'},
-                    {name: 'bus', data: [{{ profile_user.info.bus_emissions }},0],color:'rgb(160,180,210)'},
-                    {name: 'train', data: [{{ profile_user.info.train_emissions }},0],color:'rgb(160,180,210)'},
-                    {name: 'flight', data: [{{ profile_user.info.plane_emissions }},0],color:'rgb(160,180,210)'},
-                    {name: 'electricity', data: [{{ profile_user.info.electricity_emissions }},0],color:'rgb(220,220,200)'},
-                    {name: 'fuel', data: [{{ profile_user.info.fuel_emissions }},0],color:'rgb(220,220,200)'},
-                    {name: 'natural gas', data: [{{ profile_user.info.gas_emissions }},0],color:'rgb(220,220,200)'},
-                    {name: 'water', data: [{{ profile_user.info.water_emissions }},0],color:'rgb(220,220,200)'},
-                    {name: 'general meats', data: [{{ profile_user.info.general_meat_emissions }},0],color:'rgb(190,220,100)'},
-                    {name: 'poultry', data: [{{ profile_user.info.poultry_emissions }},0],color:'rgb(190,220,100)'},
-                    {name: 'seafood', data: [{{ profile_user.info.seafood_emissions }},0],color:'rgb(190,220,100)'},
-                    {name: 'vegetables', data: [{{ profile_user.info.vegetable_emissions }},0],color:'rgb(190,220,100)'},
-                    {name: 'milk', data: [{{ profile_user.info.milk_emissions }},0],color:'rgb(190,220,100)'},
-                    {name: 'drinks', data: [{{ profile_user.info.drink_emissions }},0],color:'rgb(190,220,100)'},
-                    {name: 'clothing', data: [{{ profile_user.info.clothes_emissions }},0],color:'rgb(250,160,80)'},
-                    {name: 'furniture & appliances', data: [{{ profile_user.info.furniture_emissions }},0],color:'rgb(250,160,80)'},
-                    {name: 'health care', data: [{{ profile_user.info.health_emissions }},0],color:'rgb(250,160,80)'},
-                    {name: 'vehicle expenses', data: [{{ profile_user.info.vehicle_emissions }},0],color:'rgb(250,160,80)'},
-                    {name: 'house_maintenance', data: [{{ profile_user.info.house_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'driving', data: [{{ profile_user.info.get_car_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'bus', data: [{{ profile_user.info.get_bus_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'train', data: [{{ profile_user.info.get_train_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'flight', data: [{{ profile_user.info.get_plane_emissions }},0],color:'rgb(160,180,210)'},
+                    {name: 'electricity', data: [{{ profile_user.info.get_electricity_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'fuel', data: [{{ profile_user.info.get_fuel_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'natural gas', data: [{{ profile_user.info.get_gas_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'water', data: [{{ profile_user.info.get_water_emissions }},0],color:'rgb(220,220,200)'},
+                    {name: 'general meats', data: [{{ profile_user.info.get_general_meat_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'poultry', data: [{{ profile_user.info.get_poultry_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'seafood', data: [{{ profile_user.info.get_seafood_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'vegetables', data: [{{ profile_user.info.get_vegetable_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'milk', data: [{{ profile_user.info.get_milk_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'drinks', data: [{{ profile_user.info.get_drink_emissions }},0],color:'rgb(190,220,100)'},
+                    {name: 'clothing', data: [{{ profile_user.info.get_clothes_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'furniture & appliances', data: [{{ profile_user.info.get_furniture_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'health care', data: [{{ profile_user.info.get_health_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'vehicle expenses', data: [{{ profile_user.info.get_vehicle_emissions }},0],color:'rgb(250,160,80)'},
+                    {name: 'house_maintenance', data: [{{ profile_user.info.get_house_emissions }},0],color:'rgb(250,160,80)'},
                 ]
             });
         });
