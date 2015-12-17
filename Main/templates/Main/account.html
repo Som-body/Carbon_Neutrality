@@ -89,7 +89,7 @@
                                     {% if profile_user == friendship.friend %}
                                         <a href="/user/{{ friendship.friend.get_username }}">
                                             <figure>
-                                                <img src="{{ friendship.user.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}"style="border: 10px solid #235021;">
+                                                <img src="{{ friendship.friend.info.profile_img.url }}" alt="friend #{{ forloop.counter }}, {{ friendship.friend.get_username }}" style="border: 10px solid #235021;">
                                                 <figcaption>Rank #{{ forloop.counter }}: {{ friendship.friend.get_username }}<br>Net Emission: {{ friendship.friend.info.net_emission }}Kg CO<sub>2</sub></figcaption>
                                             </figure>
                                         </a>

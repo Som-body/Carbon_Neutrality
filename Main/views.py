@@ -92,8 +92,9 @@ def finish_sign_up(request):
     redirect_to = request.REQUEST.get('next', '/')
     if request.user.is_authenticated():
         if not UserModel.objects.filter(user = request.user):
-            UserModel.objects.create(user = request.user)
-            Friend.objects.create(user = request.user, friend = request.user).save()
+            user_model = UserModel.objects.create(user = request.user)
+            user_model.save()
+            Friend.objects.create(user = request.user, friend = request.user, friend_model = user_model).save()
     return HttpResponseRedirect(redirect_to)
 
 def AccountView(request, username):
