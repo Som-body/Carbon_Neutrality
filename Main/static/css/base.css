@@ -4,6 +4,33 @@ html, body {
     height:100%;
 }
 
+.navbar {
+    margin-bottom: 0;
+    background-color: #2DBB28 !important;
+    border: 0;
+    font-size: 11px !important;
+    letter-spacing: 4px;
+    opacity:0.9;
+}
+
+.navbar li a, .navbar .navbar-brand {
+    color: white !important;
+}
+
+.navbar-nav li a:hover {
+    color: #1E311D !important;
+    background-color: white !important;
+}
+
+.navbar-nav li.active a {
+    color: #1E311D !important;
+    background-color: white !important;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+}
+
 #container {
     min-height:100%;
     position:relative;
